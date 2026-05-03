@@ -1,102 +1,190 @@
-# 🟦 StockDataManager
+# Stock Data Manager
 
-**StockDataManager** is a powerful Python tool for fetching, processing, and visualizing stock market data.  
-It automatically downloads stock data from Yahoo Finance, saves styled Excel reports, and shows interactive closing price charts. Perfect for traders, analysts, and coders who want fast, organized stock insights.  
+Stock Data Manager is a lightweight Python CLI for downloading Yahoo Finance market data, exporting polished Excel reports, and optionally displaying a closing-price chart.
 
----
+It is built for simple personal analysis workflows: choose a ticker, select a period or custom date range, generate a clean workbook, and keep previous generated reports refreshed.
 
-## ⚡ Features
+## Features
 
-- Fetch stock data by symbol (e.g., `TSLA`, `AAPL`)  
-- Support for custom date ranges or predefined periods (`1d`, `1mo`, `6mo`, `1y`, `max`, etc.)  
-- Configurable interval (`1m`, `5m`, `1d`, `1wk`, `1mo`, …)  
-- Automatically updates Excel files with latest stock data  
-- Generates clean, styled Excel sheets (Date, Time, Open, High, Low, Close, Volume)  
-- Interactive chart visualization using `matplotlib` and `Tkinter`  
-- Fully customizable and open-source  
+- Download OHLCV market data with `yfinance`
+- Export styled Excel reports with filters, frozen headers, borders, and number formatting
+- Use predefined periods such as `1mo`, `6mo`, `1y`, `ytd`, and `max`
+- Use custom date ranges with configurable intervals
+- Refresh existing generated reports in the output folder
+- Display a Tkinter/Matplotlib closing-price chart
+- Run as a plain Python script or install as a command-line tool
 
----
+## Requirements
 
-## 🛠 Installation
+- Python 3.10 or newer
+- Internet connection for Yahoo Finance data
+- Tkinter support if you want to open the chart window
 
-1. Clone the repo:  
+## Installation
+
+Clone the repository:
+
 ```bash
-git clone https://github.com/username/StockDataManager.git
-cd StockDataManager
+git clone <repository-url>
+cd Stock_Data_Manager
+```
+
+Create a virtual environment:
+
+```bash
+python -m venv .venv
+.venv\Scripts\activate
+```
+
 Install dependencies:
 
+```bash
 pip install -r requirements.txt
+```
 
+Optional editable installation:
 
-requirements.txt should include: yfinance, pandas, matplotlib, openpyxl, tkinter
+```bash
+pip install -e .
+```
 
-🚀 How to Use
+After editable installation, you can run the tool with:
 
-Open stock_data_manager.py
+```bash
+stock-data-manager --stock TSLA --period 6mo --interval 1d
+```
 
-Configure your settings at the top:
+## Usage
 
-stock = 'TSLA'           # Stock symbol
-period = "6mo"           # e.g., "1d", "1mo", "6mo", "1y", "max"
-interval = "1d"           # e.g., "1m", "5m", "1d", "1wk"
-use_custom_date = False   # Set True to use start/end dates
-start_date = "2024-01-01"
-end_date = "2024-06-01"
-show_chart = True         # Show interactive chart
-auto_update = True        # Automatically update Excel files
+Run with the default configuration:
 
+```bash
+python Stock_Data_Manager.py
+```
 
-Run the script:
+This downloads `TSLA` data for the last `6mo` using a `1d` interval, saves an Excel report to `stocks/`, refreshes existing generated reports, and opens a chart window.
 
-python stock_data_manager.py
+Download a different ticker:
 
+```bash
+python Stock_Data_Manager.py --stock AAPL
+```
 
-The Excel file will be saved in the stocks/ folder:
+Change period and interval:
 
-TSLA-1d-6mo.xlsx
+```bash
+python Stock_Data_Manager.py --stock MSFT --period 1y --interval 1d
+```
 
+Use a custom date range:
 
-If show_chart = True, an interactive chart window will appear with closing prices.
+```bash
+python Stock_Data_Manager.py --stock NVDA --start-date 2024-01-01 --end-date 2024-06-01 --custom-interval 1d
+```
 
-📊 Example Output
+Skip the chart window:
 
-Excel Sheet Columns:
+```bash
+python Stock_Data_Manager.py --stock TSLA --no-chart
+```
 
-Date – Trading date
+Skip automatic refresh of existing reports:
 
-Time – Always 00:00:00
+```bash
+python Stock_Data_Manager.py --stock TSLA --no-auto-update
+```
 
-Open – Opening price
+Choose another output folder:
 
-High – Highest price
+```bash
+python Stock_Data_Manager.py --stock TSLA --output-dir reports
+```
 
-Low – Lowest price
+## Command-Line Options
 
-Close – Closing price
+| Option | Description | Default |
+| --- | --- | --- |
+| `--stock` | Ticker symbol, for example `TSLA` or `AAPL` | `TSLA` |
+| `--period` | Yahoo Finance period | `6mo` |
+| `--interval` | Yahoo Finance interval for period-based downloads | `1d` |
+| `--start-date` | Custom start date in `YYYY-MM-DD` format | none |
+| `--end-date` | Custom end date in `YYYY-MM-DD` format | none |
+| `--custom-interval` | Interval for custom date ranges | `1d` |
+| `--output-dir` | Folder for generated Excel files | `stocks` |
+| `--no-chart` | Skip the chart window | disabled |
+| `--no-auto-update` | Skip refreshing existing generated reports | disabled |
 
-Volume – Trading volume
+Supported periods:
 
-Chart Example:
-Closing price over the last 6 months (interactive, zoomable via Tkinter/Matplotlib)
+```text
+1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max
+```
 
-⚙️ Notes
+Supported intervals:
 
-If auto_update = True, existing Excel files in the folder will be updated automatically
+```text
+1m, 2m, 5m, 15m, 30m, 60m, 90m, 1d, 5d, 1wk, 1mo, 3mo
+```
 
-Supports all major Yahoo Finance stock symbols
+Note: Yahoo Finance limits very short intervals such as `1m` to recent date ranges.
 
-Designed for Windows, Linux, and MacOS with Python 3.9+
+## Output
 
-💡 Future Improvements
+Generated workbooks contain:
 
-Add versioning for Excel files instead of overwriting
+| Column | Description |
+| --- | --- |
+| Date | Trading date |
+| Time | Trading time |
+| Open | Opening price |
+| High | Highest price |
+| Low | Lowest price |
+| Close | Closing price |
+| Volume | Trading volume |
 
-Add multiple stock comparison charts
+Example output file:
 
-Export charts as PNG or PDF automatically
+```text
+stocks/TSLA-1d-6mo.xlsx
+```
 
-Include candlestick charts for better analysis
+Generated Excel files are ignored by Git so the repository stays clean.
 
-📝 License
+## Project Structure
 
-MIT License – free to use, modify,
+```text
+Stock_Data_Manager/
+  .github/
+    ISSUE_TEMPLATE/
+    workflows/
+  CHANGELOG.md
+  CONTRIBUTING.md
+  LICENSE
+  README.md
+  Stock_Data_Manager.py
+  pyproject.toml
+  requirements.txt
+```
+
+## Development
+
+Run basic checks:
+
+```bash
+python -m py_compile Stock_Data_Manager.py
+python Stock_Data_Manager.py --help
+```
+
+Run a real export test after installing dependencies:
+
+```bash
+python Stock_Data_Manager.py --stock TSLA --period 1mo --interval 1d --no-chart --no-auto-update
+```
+
+## License
+
+This project is licensed under the MIT License. See [LICENSE](LICENSE).
+
+## Disclaimer
+
+This project is for educational and personal analysis purposes only. It does not provide financial advice.

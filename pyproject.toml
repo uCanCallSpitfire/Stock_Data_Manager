@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "stock-data-manager"
+version = "1.0.0"
+description = "Download Yahoo Finance stock data and export polished Excel reports."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { file = "LICENSE" }
+authors = [
+  { name = "Stock Data Manager contributors" }
+]
+keywords = ["stocks", "finance", "yahoo-finance", "excel", "matplotlib"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Financial and Insurance Industry",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Office/Business :: Financial",
+]
+dependencies = [
+  "yfinance>=0.2.40",
+  "pandas>=2.0.0",
+  "matplotlib>=3.7.0",
+  "openpyxl>=3.1.0",
+]
+
+[project.scripts]
+stock-data-manager = "Stock_Data_Manager:main"
+
+[tool.setuptools]
+py-modules = ["Stock_Data_Manager"]
